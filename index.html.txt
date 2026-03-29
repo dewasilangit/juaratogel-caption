@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Caption Twitter - Caption Juara</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+      text-align: center;
+      color: #a1a1aa;
+      margin-bottom: 40px;
+      font-size: 18px;
+    }
+
+    .input-area {
+      margin-bottom: 30px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 160px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      font-size: 16px;
+      resize: none;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    textarea:focus {
+      border-color: #a855f7;
+      box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4);
+    }
+
+    .result {
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .caption-text {
+      font-size: 17px;
+      line-height: 1.6;
+      color: #e0e0e0;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+
+    .btn-copy {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-copy:hover {
+      background: #a855f7;
+      border-color: #a855f7;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #a1a1aa;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #71717a;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Caption Juara</h1>
+    <p class="subtitle">Generator Caption Twitter / X Terbaik</p>
+
+    <div class="input-area">
+      <textarea id="inputText" placeholder="Masukkan kata kunci atau topikmu di sini...&#10;Contoh: jualan es teh, motivasi pagi, liburan ke bali"></textarea>
+      <button class="btn-generate" id="generateBtn">🚀 Generate Caption</button>
+    </div>
+
+    <div class="loading" id="loading">Sedang membuat caption juara...</div>
+
+    <div class="result" id="result">
+      <div class="caption-text" id="captionOutput"></div>
+      <button class="btn-copy" id="copyBtn">📋 Copy Caption</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Dibuat ulang dengan ❤️ • Mirip dengan CaptionJuara
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const inputText = document.getElementById('inputText');
+    const loading = document.getElementById('loading');
+    const result = document.getElementById('result');
+    const captionOutput = document.getElementById('captionOutput');
+    const copyBtn = document.getElementById('copyBtn');
+
+    // Daftar template caption (bisa kamu tambah sendiri)
+    const templates = [
+      "🔥 {keyword} bikin hari ini makin seru! Siapa yang ikutan? 👀",
+      "Gak nyangka {keyword} bisa segini enaknya! ✅ Recommended banget!",
+      "Pagi-pagi udah excited sama {keyword}. Siap gaspol hari ini! 💪",
+      "Baru coba {keyword} dan langsung ketagihan! Kamu udah pernah? 😍",
+      "Tips juara: {keyword} adalah kunci sukses di 2026! 📈",
+      "Mau viral? Coba posting tentang {keyword} dengan gaya ini 🔥",
+      "Dari nol sampai hero berkat {keyword}. Cerita lengkap di thread ini 👇",
+      "Siapa bilang {keyword} susah? Ternyata gampang banget kok! 😉"
+    ];
+
+    function generateCaption(keyword) {
+      if (!keyword.trim()) {
+        return "Masukkan kata kunci dulu ya biar aku bisa bantu buat caption keren! ✨";
+      }
+
+      const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+      let caption = randomTemplate.replace("{keyword}", keyword);
+
+      // Tambah variasi emoji dan hashtag
+      const hashtags = ["#CaptionJuara", "#TwitterTips", "#ContentCreator", "#Viral"];
+      caption += "\n\n" + hashtags.join(" ");
+
+      return caption;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const keyword = inputText.value.trim();
+
+      // Tampilkan loading
+      loading.style.display = 'block';
+      result.classList.remove('show');
+
+      // Simulasi delay generate (seperti AI)
+      setTimeout(() => {
+        const generated = generateCaption(keyword);
+        captionOutput.textContent = generated;
+        
+        loading.style.display = 'none';
+        result.classList.add('show');
+      }, 1200);
+    });
+
+    // Copy ke clipboard
+    copyBtn.addEventListener('click', () => {
+      const text = captionOutput.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = "✅ Berhasil dicopy!";
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+        }, 2000);
+      });
+    });
+
+    // Enter key support
+    inputText.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        generateBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
